@@ -5,7 +5,15 @@ Makes use of [nix-luarocks](https://github.com/nix-community/luarocks-nix), a fo
 As far as I can tell, those generated packages are intended to be inserted into nixpkgs, but having to fork nixpkgs again to add a small handful of packages is a pain. I wrote this flake so that I could reference it from other flakes and pull in any luarocks I want without a hassle.
 
 # Usage example
-This is how I packaged croissant in this flake.
+
+## From another flake
+
+Here's a recording of how I packaged [croissant in another flake](https://github.com/vivlim/croissant-nix). See that repo for more details.
+
+![screen recording very similar to the below written steps](demo.svg)
+
+## From within this flake
+This is how I packaged croissant in this flake. The overall process is the same except the nix run commands are slightly different (if you're in another flake, you should write `nix run github:vivlim/rock-candy#gen` instead of `.#gen`)
 
 The generate script assumes you want to write into a folder whose name ends with luarocks.
 ```
@@ -13,7 +21,6 @@ $ mkdir generated-luarocks && cd generated-luarocks
 ```
 
 I'm referring to that directory in nix; here's the current state of overlay.nix (look at that in case it's drifted away from this readme)
-If you are referencing the flake from another flake, `./lib` is exported as a flake output named `lib`, so you should be able to use `luaWithRocksFromDir` elsewhere with your own set of luarocks. I don't have an example of this yet but I'll mention it here when I do.
 ```
 {pkgs, nixpkgsFlake, luarocks-nix}: let 
   myLib = (import ./lib) {
